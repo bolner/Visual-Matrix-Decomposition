@@ -5,12 +5,19 @@ using System.Drawing;
 namespace RotationDecomposition {
     public class Program {
         public static void Main(string[] args) {
+            Scene scene;
             var shape = new double[,] { {2, 2}, {4, 4}, {3, 5}, {4, 6}, {2, 6}, {0, 6}, {1, 5}, {0, 4}, {2, 2}, {3, 2} };
 
-            var scene = new Scene("LU_rotation", shape, Color.Black);
+            scene = new Scene("LU_rotation", shape, Color.Black);
             scene.AddActor(Color.White, (double time) => getRotationMatrix(time));
             scene.AddActor(Color.LightGreen, (double time) => getRotationMatrix(time).LU().L);
             scene.AddActor(Color.Orange, (double time) => getRotationMatrix(time).LU().U);
+            scene.Play(120, Math.PI * 2);
+
+            scene = new Scene("QR_rotation", shape, Color.Black);
+            scene.AddActor(Color.White, (double time) => getRotationMatrix(time));
+            scene.AddActor(Color.LightGreen, (double time) => getRotationMatrix(time).QR().Q);
+            scene.AddActor(Color.Orange, (double time) => getRotationMatrix(time).QR().R);
             scene.Play(120, Math.PI * 2);
         }
 
