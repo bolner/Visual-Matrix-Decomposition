@@ -37,8 +37,8 @@ namespace RotationDecomposition {
 
             // We have 3 shots per frame as temporal anti-aliasing (first has alpha=1)
             double q = Math.Pow(1.0 / 3.0, 1.0 / 2.0);
-            int width = 1024;
-            int height = 1024;
+            int width = 1080;
+            int height = 1080;
             double zoom = 25;
 
             for (int frame = 0; frame < frameCount; frame++) {
