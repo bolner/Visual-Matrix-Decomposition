@@ -28,7 +28,7 @@ namespace RotationDecomposition {
         }
 
         public static void DrawAxes(System.Drawing.Graphics graphics, double width, double height, double centerX, double centerY,
-                double zoom, Vector<double>[] vectors, Color color) {
+                double zoom, Color color) {
 
             using (Pen originPen = new Pen(color, 1.1f)) {
                 graphics.DrawLine(originPen, (float)(width * 0.5 - centerX * zoom), 0, (float)(width * 0.5 - centerX * zoom),

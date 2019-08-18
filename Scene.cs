@@ -9,35 +9,17 @@ using System.Drawing.Drawing2D;
 namespace RotationDecomposition {
     public class Scene {
         private string folderName;
-        private Vector<double>[] shape;
         private List<Actor> actors;
         private Color backgroundColor;
 
-        public Scene(string folderName, double[,] shape, Color backgroundColor) {
+        public Scene(string folderName, Color backgroundColor) {
             this.folderName = $"var/{folderName}";
-            this.shape = ToVectorArray(shape);
             this.actors = new List<Actor>();
             this.backgroundColor = backgroundColor;
         }
 
-        public void AddActor(Color color, Func<double, Matrix<double>> role) {
-            this.actors.Add(new Actor(color, role));
-        }
-
-        private Vector<double>[] ToVectorArray(double[,] vectors) {
-            var items = new Vector<double>[vectors.GetLength(0)];
-            
-            for(int i = 0; i < vectors.GetLength(0); i++) {
-                var v3 = Vector<double>.Build.Dense(3);
-                
-                v3[0] = vectors[i, 0];
-                v3[1] = vectors[i, 1];
-                v3[2] = 1;
-                
-                items[i] = v3;
-            }
-            
-            return items;
+        public void AddActor(double[,] points, Color color, Func<double, Matrix<double>> role) {
+            this.actors.Add(new Actor(points, color, role));
         }
 
         public void Play(int frameCount, double speed) {
@@ -55,8 +37,9 @@ namespace RotationDecomposition {
 
             // We have 3 shots per frame as temporal anti-aliasing (first has alpha=1)
             double q = Math.Pow(1.0 / 3.0, 1.0 / 2.0);
-            int width = 800;
-            int height = 800;
+            int width = 1024;
+            int height = 1024;
+            double zoom = 25;
 
             for (int frame = 0; frame < frameCount; frame++) {
                 using (Bitmap mainImage = new Bitmap((int)width, (int)height))
@@ -75,13 +58,12 @@ namespace RotationDecomposition {
                         {
                             graphics.Clear(this.backgroundColor);
                             graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                            Graphics.DrawAxes(graphics, width, height, 0, 0, 20, shape, Color.DimGray);
-                            Graphics.Draw(graphics, width, height, 0, 0, 20, shape, Color.Gray);
+                            Graphics.DrawAxes(graphics, width, height, 0, 0, zoom, Color.DimGray);
 
                             foreach(var actor in actors) {
-                                var points = applyMatrix(actor.GetMatrix(time));
+                                var points = actor.GetTransformedPoints(time);
 
-                                Graphics.Draw(graphics, width, height, 0, 0, 20, points, actor.Color);
+                                Graphics.Draw(graphics, width, height, 0, 0, zoom, points, actor.Color);
                             }
 
                             graphics.Flush();
@@ -110,16 +92,6 @@ namespace RotationDecomposition {
             }
 
             Console.WriteLine("   Finished.");
-        }
-
-        private Vector<double>[] applyMatrix(Matrix<double> M) {
-            var result = new Vector<double>[shape.GetLength(0)];
-
-            for(int i = 0; i < shape.GetLength(0); i++) {
-                result[i] = M * shape[i];
-            }
-
-            return result;
         }
     }
 }
