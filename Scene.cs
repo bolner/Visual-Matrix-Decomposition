@@ -37,7 +37,7 @@ namespace RotationDecomposition {
             this.actors.Add(new Actor(points, color, role));
         }
 
-        public void Play(int frameCount, double speed) {
+        public void Play(int frameCount, double domain) {
             if (Directory.Exists(this.folderName)) {
                 Console.WriteLine($" - {this.folderName}: Folder already exists. Skipping this render.");
                 return;
@@ -50,23 +50,24 @@ namespace RotationDecomposition {
                 throw new Exception("Invalid frameCount parameter.");
             }
 
-            // We have 3 shots per frame as temporal anti-aliasing (first has alpha=1)
-            double q = Math.Pow(1.0 / 3.0, 1.0 / 2.0);
+            int shots = 5;
+            int sm1 = shots - 1;
+            double q = Math.Pow(1.0 / (double)shots, 1.0 / (double)(shots - 1));
             int width = 1080;
             int height = 1080;
-            double zoom = 25;
+            double zoom = 8;
 
             for (int frame = 0; frame < frameCount; frame++) {
                 using (Bitmap mainImage = new Bitmap((int)width, (int)height))
                 using (System.Drawing.Graphics mainGraphics = System.Drawing.Graphics.FromImage(mainImage))
                 {
                     /*
-                        Temporal anti-aliasing
+                        Loop for temporal anti-aliasing
                     */
-                    for(int shot = 0; shot < 3; shot++) {
-                        double frameLength = speed / (double)frameCount;
+                    for(int shot = 0; shot < shots; shot++) {
+                        double frameLength = domain / (double)frameCount;
                         double timeBase = frameLength * ((double)frame);
-                        double time = timeBase - (frameLength / 4) * (2 - shot);
+                        double time = timeBase - ((frameLength / 2) / sm1) * (sm1 - shot);
 
                         using (Bitmap image = new Bitmap((int)width, (int)height))
                         using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image))

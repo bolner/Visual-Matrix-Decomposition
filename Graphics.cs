@@ -25,9 +25,15 @@ namespace RotationDecomposition {
 
             PointF previous = new PointF(float.NegativeInfinity, float.NegativeInfinity);
 
-            using (Pen pen = new Pen(color, 4.2f))
+            using (Pen pen = new Pen(color, 3.6f))
             {
                 for (int i = 0; i < vectors.Length; i++) {
+                    if (vectors[i][0] == double.NegativeInfinity) {
+                        // Instruction for raising the pen
+                        previous = new PointF(float.NegativeInfinity, float.NegativeInfinity);
+                        continue;
+                    }
+
                     PointF next = new PointF(
                         (float)((width * 0.5) + (vectors[i][0] - centerX) * zoom),
                         (float)((height * 0.5) - (vectors[i][1] - centerY) * zoom)

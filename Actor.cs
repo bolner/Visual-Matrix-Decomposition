@@ -1,4 +1,3 @@
-using System;
 /*
     Copyright 2019 Tamas Bolner
     
@@ -14,6 +13,7 @@ using System;
     See the License for the specific language governing permissions and
     limitations under the License.
 */
+using System;
 using System.Drawing;
 using MathNet.Numerics.LinearAlgebra;
 
@@ -38,7 +38,12 @@ namespace RotationDecomposition {
             var M = Role(time);
 
             for(int i = 0; i < Points.GetLength(0); i++) {
-                result[i] = M * Points[i];
+                if (Points[i][0] == double.NegativeInfinity) {
+                    // This is just an instruction to raise the pen
+                    result[i] = Points[i];
+                } else {
+                    result[i] = M * Points[i];
+                }
             }
 
             return result;
