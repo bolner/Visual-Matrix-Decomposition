@@ -2,7 +2,7 @@
 
 This a `.NET Core` application that generates animations. It applies LU and QR decompositions to linear transformations, and shows the effects of the factors independently. See example result:
 
-[![Watch the video](doc/tumbler.jpg)](https://www.youtube.com/watch?v=Mc89G9_kPwk)
+[![Watch the video](doc/tumbler.jpg)](https://www.youtube.com/watch?v=AIOEtorHctc)
 
 And this is an example for the QR decomposition: https://www.youtube.com/watch?v=CWEhxN0hemE
 
