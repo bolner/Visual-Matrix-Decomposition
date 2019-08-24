@@ -31,6 +31,8 @@ namespace RotationDecomposition {
                 {15, 6}, {15, 12}, {18, 12}, {18, 6} // Door
             };
             var identity = Matrix<double>.Build.DenseIdentity(3);
+            var e = Vector<double>.Build.DenseOfArray(new double[] {1, 1, 1});
+            var rot180 = getRotationMatrix(Math.PI);
 
             scene = new Scene("LU_translation", Color.Black);
             scene.AddActor(cross, Color.Gray, (double time, Scene.StatePair state)
@@ -55,11 +57,11 @@ namespace RotationDecomposition {
             scene = new Scene("LU_composite_RT", Color.Black);
             scene.AddActor(clock, Color.DimGray, (double time, Scene.StatePair state) => getRotationMatrix(time));
             scene.AddActor(cross, Color.DimGray, (double time, Scene.StatePair state)
-                => (state.Current.M = getCompositeMatrix_RT(time)));
+                => (state.Current.M1 = getCompositeMatrix_RT(time)));
             scene.AddActor(shape, Color.FromArgb(255, 40, 40, 40), (double time, Scene.StatePair state) => identity);
-            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M);
+            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M1);
             scene.AddActor(shape, Color.LightGreen, (double time, Scene.StatePair state)
-                => (state.Current.LU = state.Current.M.LU()).L);
+                => (state.Current.LU = state.Current.M1.LU()).L);
             scene.AddActor(shape, Color.Orange, (double time, Scene.StatePair state) => state.Current.LU.U);
             scene.Play(200, Math.PI * 2);
 
@@ -67,22 +69,22 @@ namespace RotationDecomposition {
             scene.AddActor(clock, Color.DimGray, (double time, Scene.StatePair state)
                 => (state.Current.Rotate = getRotationMatrix(time)));
             scene.AddActor(cross, Color.DimGray, (double time, Scene.StatePair state)
-                => (state.Current.M = getCompositeMatrix_RTS(time)));
+                => (state.Current.M1 = getCompositeMatrix_RTS(time)));
             scene.AddActor(shape, Color.FromArgb(255, 40, 40, 40), (double time, Scene.StatePair state) => identity);
-            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M);
+            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M1);
             scene.AddActor(shape, Color.LightGreen, (double time, Scene.StatePair state)
-                => (state.Current.LU = state.Current.M.LU()).L);
+                => (state.Current.LU = state.Current.M1.LU()).L);
             scene.AddActor(shape, Color.Orange, (double time, Scene.StatePair state) => state.Current.LU.U);
             scene.Play(200, Math.PI * 2);
 
             scene = new Scene("LU_composite_RTH", Color.Black);
             scene.AddActor(clock, Color.DimGray, (double time, Scene.StatePair state) => getRotationMatrix(time));
             scene.AddActor(cross, Color.DimGray, (double time, Scene.StatePair state)
-                => (state.Current.M = getCompositeMatrix_RTH(time)));
+                => (state.Current.M1 = getCompositeMatrix_RTH(time)));
             scene.AddActor(shape, Color.FromArgb(255, 40, 40, 40), (double time, Scene.StatePair state) => identity);
-            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M);
+            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M1);
             scene.AddActor(shape, Color.LightGreen, (double time, Scene.StatePair state)
-                => (state.Current.LU = state.Current.M.LU()).L);
+                => (state.Current.LU = state.Current.M1.LU()).L);
             scene.AddActor(shape, Color.Orange, (double time, Scene.StatePair state) => state.Current.LU.U);
             scene.Play(200, Math.PI * 2);
 
@@ -109,34 +111,56 @@ namespace RotationDecomposition {
             scene = new Scene("QR_composite_RT", Color.Black);
             scene.AddActor(clock, Color.DimGray, (double time, Scene.StatePair state) => getRotationMatrix(time));
             scene.AddActor(cross, Color.DimGray, (double time, Scene.StatePair state)
-                => (state.Current.M = getCompositeMatrix_RT(time)));
+                => (state.Current.M1 = getCompositeMatrix_RT(time)));
             scene.AddActor(shape, Color.FromArgb(255, 40, 40, 40), (double time, Scene.StatePair state) => identity);
-            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M);
+            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M1);
             scene.AddActor(shape, Color.LightGreen, (double time, Scene.StatePair state)
-                => (state.Current.QR = state.Current.M.QR()).Q);
+                => (state.Current.QR = state.Current.M1.QR()).Q);
             scene.AddActor(shape, Color.Orange, (double time, Scene.StatePair state) => state.Current.QR.R);
             scene.Play(200, Math.PI * 2);
 
             scene = new Scene("QR_composite_RTS", Color.Black);
             scene.AddActor(clock, Color.DimGray, (double time, Scene.StatePair state) => getRotationMatrix(time));
             scene.AddActor(cross, Color.DimGray, (double time, Scene.StatePair state)
-                => (state.Current.M = getCompositeMatrix_RTS(time)));
+                => (state.Current.M1 = getCompositeMatrix_RTS(time)));
             scene.AddActor(shape, Color.FromArgb(255, 40, 40, 40), (double time, Scene.StatePair state) => identity);
-            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M);
+            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M1);
             scene.AddActor(shape, Color.LightGreen, (double time, Scene.StatePair state)
-                => (state.Current.QR = state.Current.M.QR()).Q);
+                => (state.Current.QR = state.Current.M1.QR()).Q);
             scene.AddActor(shape, Color.Orange, (double time, Scene.StatePair state) => state.Current.QR.R);
             scene.Play(200, Math.PI * 2);
 
             scene = new Scene("QR_composite_RTH", Color.Black);
             scene.AddActor(clock, Color.DimGray, (double time, Scene.StatePair state) => getRotationMatrix(time));
             scene.AddActor(cross, Color.DimGray, (double time, Scene.StatePair state)
-                => (state.Current.M = getCompositeMatrix_RTH(time)));
+                => (state.Current.M1 = getCompositeMatrix_RTH(time)));
             scene.AddActor(shape, Color.FromArgb(255, 40, 40, 40), (double time, Scene.StatePair state) => identity);
-            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M);
+            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M1);
             scene.AddActor(shape, Color.LightGreen, (double time, Scene.StatePair state)
-                => (state.Current.QR = state.Current.M.QR()).Q);
+                => (state.Current.QR = state.Current.M1.QR()).Q);
             scene.AddActor(shape, Color.Orange, (double time, Scene.StatePair state) => state.Current.QR.R);
+            scene.Play(200, Math.PI * 2);
+
+            scene = new Scene("QR_composite_RTS_continuous", Color.Black);
+            scene.AddActor(clock, Color.DimGray, (double time, Scene.StatePair state)
+                => (state.Current.Rotate = getRotationMatrix(time)));
+            scene.AddActor(cross, Color.DimGray, (double time, Scene.StatePair state)
+                => (state.Current.M1 = getCompositeMatrix_RTS(time)));
+            scene.AddActor(shape, Color.FromArgb(255, 40, 40, 40), (double time, Scene.StatePair state) => identity);
+            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M1);
+            scene.AddActor(shape, Color.LightGreen, (double time, Scene.StatePair state) => {
+                var qr = state.Current.M1.QR();
+                if ((qr.R * e)[0] < 0) {
+                    state.Current.M1 = rot180 * qr.Q;
+                    state.Current.M2 = rot180 * qr.R;
+                } else {
+                    state.Current.M1 = qr.Q;
+                    state.Current.M2 = qr.R;
+                }
+
+                return state.Current.M1;
+            });
+            scene.AddActor(shape, Color.Orange, (double time, Scene.StatePair state) => state.Current.M2);
             scene.Play(200, Math.PI * 2);
         }
 
