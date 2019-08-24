@@ -172,8 +172,6 @@ namespace RotationDecomposition {
                     */
                     state.Current.M1 = rot180 * qr.Q;
                     state.Current.M2 = rot180 * qr.R;
-
-                    Console.WriteLine(state.Current.M2);
                 } else {
                     state.Current.M1 = qr.Q;
                     state.Current.M2 = qr.R;
