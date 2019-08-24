@@ -20,22 +20,22 @@ using MathNet.Numerics.LinearAlgebra;
 namespace RotationDecomposition {
     public class Actor {
         public Color Color { get; }
-        public Func<double, Matrix<double>> Role { get; }
+        public Func<double, Scene.StatePair, Matrix<double>> Role { get; }
         private Vector<double>[] Points;
 
-        public Actor(double[,] points, Color color, Func<double, Matrix<double>> role) {
+        public Actor(double[,] points, Color color, Func<double, Scene.StatePair, Matrix<double>> role) {
             this.Color = color;
             this.Role = role;
             this.Points = ToVectorArray(points);
         }
 
-        public Matrix<double> GetMatrix(double time) {
-            return Role(time);
+        public Matrix<double> GetMatrix(double time, Scene.StatePair state) {
+            return Role(time, state);
         }
 
-        public Vector<double>[] GetTransformedPoints(double time) {
+        public Vector<double>[] GetTransformedPoints(double time, Scene.StatePair state) {
             var result = new Vector<double>[Points.GetLength(0)];
-            var M = Role(time);
+            var M = Role(time, state);
 
             for(int i = 0; i < Points.GetLength(0); i++) {
                 if (Points[i][0] == double.NegativeInfinity) {

@@ -16,6 +16,7 @@
 using System;
 using System.IO;
 using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Factorization;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
@@ -26,14 +27,41 @@ namespace RotationDecomposition {
         private string folderName;
         private List<Actor> actors;
         private Color backgroundColor;
+        private StatePair state;
 
+        public class StatePair {
+            public State Old { get; set; }
+            public State Current { get; set; }
+
+            public StatePair() {
+                Old = new State();
+                Current = new State();
+            }
+
+            public void Flip() {
+                Old = Current;
+                Current = new State();
+            }
+        }
+
+        public class State {
+            public Matrix<double> Rotate { get; set; }
+            public Matrix<double> Translate { get; set; }
+            public Matrix<double> Scale { get; set; }
+            public Matrix<double> Shear { get; set; }
+            public LU<double> LU { get; set; }
+            public QR<double> QR { get; set; }
+            public Matrix<double> M { get; set; }
+        }
+        
         public Scene(string folderName, Color backgroundColor) {
             this.folderName = $"var/{folderName}";
             this.actors = new List<Actor>();
             this.backgroundColor = backgroundColor;
+            this.state = new StatePair();
         }
 
-        public void AddActor(double[,] points, Color color, Func<double, Matrix<double>> role) {
+        public void AddActor(double[,] points, Color color, Func<double, StatePair, Matrix<double>> role) {
             this.actors.Add(new Actor(points, color, role));
         }
 
@@ -77,7 +105,7 @@ namespace RotationDecomposition {
                             Graphics.DrawAxes(graphics, width, height, 0, 0, zoom, Color.DimGray);
 
                             foreach(var actor in actors) {
-                                var points = actor.GetTransformedPoints(time);
+                                var points = actor.GetTransformedPoints(time, this.state);
 
                                 Graphics.Draw(graphics, width, height, 0, 0, zoom, points, actor.Color);
                             }
@@ -100,6 +128,8 @@ namespace RotationDecomposition {
                                     image.Width, image.Height, GraphicsUnit.Pixel, attributes);
                             }
                         }
+
+                        this.state.Flip();
                     }
 
                     mainGraphics.Flush();
