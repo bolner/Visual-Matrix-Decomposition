@@ -1,6 +1,6 @@
 # Visualizing Matrix Decomposition
 
-This a `.NET Core` application that generates animations. It applies LU and QR decompositions to linear transformations, and shows the effects of the factors independently. See example result:
+This `.NET Core` application generates animations. It applies LU and QR decompositions to linear transformations, and shows the effects of the factors independently. See example result:
 
 [![Watch the video](doc/tumbler.jpg)](https://www.youtube.com/watch?v=AIOEtorHctc)
 
