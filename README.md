@@ -4,7 +4,10 @@ This `.NET Core` application generates animations. It applies LU and QR decompos
 
 [![Watch the video](doc/tumbler.jpg)](https://www.youtube.com/watch?v=AIOEtorHctc)
 
-And this is an example for the QR decomposition: https://www.youtube.com/watch?v=CWEhxN0hemE
+Other videos:
+- QR decomposition: https://www.youtube.com/watch?v=CWEhxN0hemE
+- Continuous QR decomposition: https://www.youtube.com/watch?v=ZDH84Yu8B3E
+- An older version of the LU dec.: https://www.youtube.com/watch?v=Mc89G9_kPwk
 
 # Install `.NET Core`
 

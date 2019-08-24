@@ -168,6 +168,7 @@ namespace RotationDecomposition {
                             - R remains upper triangular after the PI rotation, because the PI
                                 rotation matrix is also upper triangular (UT), and the product of
                                 2 UT matrices will always remain UT.
+                            - Q remains orthogonal, since all rotation matrices are orthogonal.
                     */
                     state.Current.M1 = rot180 * qr.Q;
                     state.Current.M2 = rot180 * qr.R;
