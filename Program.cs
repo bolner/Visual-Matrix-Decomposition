@@ -160,8 +160,19 @@ namespace RotationDecomposition {
                 }
                 
                 if (angle > Math.PI / 2.0) {
+                    /*
+                        In case the rotation would jump PI (compared to the previous frame),
+                        rotate both Q and R with PI, to cancel the jump. This works, because:
+                            - Rotation matrices around the same point commute with each other,
+                                so M*Q*M*R = Q*M*M*R = Q*R
+                            - R remains upper triangular after the PI rotation, because the PI
+                                rotation matrix is also upper triangular (UT), and the product of
+                                2 UT matrices will always remain UT.
+                    */
                     state.Current.M1 = rot180 * qr.Q;
                     state.Current.M2 = rot180 * qr.R;
+
+                    Console.WriteLine(state.Current.M2);
                 } else {
                     state.Current.M1 = qr.Q;
                     state.Current.M2 = qr.R;
