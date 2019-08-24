@@ -22,6 +22,7 @@ namespace RotationDecomposition {
         public static void Main(string[] args) {
             Scene scene;
             var clock = new double[,] { {0, 0}, {200, 0} };
+            var line = new double[,] { {-200, 0}, {200, 0} };
             var cross = new double[,] { {1.5, 1.5}, {-1.5, -1.5}, {double.NegativeInfinity, double.NegativeInfinity}, {-1.5, 1.5}, {1.5, -1.5} };
             var shape = new double[,] {
                 {6, 14}, {6, 6}, {20, 6}, {20, 14}, {double.NegativeInfinity, double.NegativeInfinity},
@@ -142,15 +143,23 @@ namespace RotationDecomposition {
             scene.Play(200, Math.PI * 2);
 
             scene = new Scene("QR_composite_RTS_continuous", Color.Black);
-            scene.AddActor(clock, Color.DimGray, (double time, Scene.StatePair state)
+            scene.AddActor(line, Color.DimGray, (double time, Scene.StatePair state)
                 => (state.Current.Rotate = getRotationMatrix(time)));
             scene.AddActor(cross, Color.DimGray, (double time, Scene.StatePair state)
-                => (state.Current.M1 = getCompositeMatrix_RTS(time)));
+                => (state.Current.M1 = getCompositeMatrix_RTS2(time)));
             scene.AddActor(shape, Color.FromArgb(255, 40, 40, 40), (double time, Scene.StatePair state) => identity);
             scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M1);
             scene.AddActor(shape, Color.LightGreen, (double time, Scene.StatePair state) => {
                 var qr = state.Current.M1.QR();
-                if ((qr.R * e)[0] < 0) {
+                double angle;
+
+                if (state.Old.M1 == null) {
+                    angle = Math.PI;
+                } else {
+                    angle = getAngle2D(state.Old.M1 * e, qr.Q * e);
+                }
+                
+                if (angle > Math.PI / 2.0) {
                     state.Current.M1 = rot180 * qr.Q;
                     state.Current.M2 = rot180 * qr.R;
                 } else {
@@ -161,7 +170,7 @@ namespace RotationDecomposition {
                 return state.Current.M1;
             });
             scene.AddActor(shape, Color.Orange, (double time, Scene.StatePair state) => state.Current.M2);
-            scene.Play(200, Math.PI * 2);
+            scene.Play(300, Math.PI * 2);
         }
 
         private static Matrix<double> getRotationMatrix(double time) {
@@ -177,6 +186,19 @@ namespace RotationDecomposition {
         private static Matrix<double> getTranslationMatrix(double time) {
             double x = Math.Cos(time) * 20 * (1 - Math.Cos(time * 2));
             double y = Math.Sin(time) * 20 * (1 - Math.Cos(time * 2));
+
+            var T = Matrix<double>.Build.DenseOfArray(new double[,] {
+                {1, 0, x},
+                {0, 1, y},
+                {0, 0, 1}
+            });
+
+            return T;
+        }
+
+        private static Matrix<double> getTranslationMatrix2(double time) {
+            double x = Math.Cos(time) * 40 * Math.Sin(time * 2);
+            double y = Math.Sin(time) * 40 * Math.Sin(time * 2);
 
             var T = Matrix<double>.Build.DenseOfArray(new double[,] {
                 {1, 0, x},
@@ -224,6 +246,10 @@ namespace RotationDecomposition {
             return getTranslationMatrix(time) * getRotationMatrix(time) * getScalingMatrix(time);
         }
 
+        private static Matrix<double> getCompositeMatrix_RTS2(double time) {
+            return getTranslationMatrix2(time) * getRotationMatrix(time) * getScalingMatrix(time);
+        }
+
         private static Matrix<double> getShearMatrix(double time) {
             double x = (1 - Math.Cos(time)) / 2.0;
 
@@ -238,6 +264,13 @@ namespace RotationDecomposition {
 
         private static Matrix<double> getCompositeMatrix_RTH(double time) {
             return getTranslationMatrix(time) * getRotationMatrix(time) * getShearMatrix(time);
+        }
+
+        private static double getAngle2D(Vector<double> v1, Vector<double> v2) {
+            return Math.Acos(
+                (v1[0] * v2[0] + v1[1] * v2[1])
+                / Math.Sqrt((v1[0] * v1[0] + v1[1] * v1[1]) * (v2[0] * v2[0] + v2[1] * v2[1]))
+            );
         }
     }
 }
