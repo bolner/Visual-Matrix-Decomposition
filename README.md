@@ -8,6 +8,7 @@ Other videos:
 - QR decomposition: https://www.youtube.com/watch?v=CWEhxN0hemE
 - Continuous QR decomposition: https://www.youtube.com/watch?v=ZDH84Yu8B3E
 - An older version of the LU dec.: https://www.youtube.com/watch?v=Mc89G9_kPwk
+- Eigendecomposition: https://www.youtube.com/watch?v=ZpqwO0348Dw
 
 # Install `.NET Core`
 

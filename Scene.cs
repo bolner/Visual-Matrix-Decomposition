@@ -51,6 +51,7 @@ namespace RotationDecomposition {
             public Matrix<double> Shear { get; set; }
             public LU<double> LU { get; set; }
             public QR<double> QR { get; set; }
+            public Evd<double> Evd { get; set; }
             public Matrix<double> M1 { get; set; }
             public Matrix<double> M2 { get; set; }
         }

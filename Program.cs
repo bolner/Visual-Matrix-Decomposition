@@ -181,6 +181,18 @@ namespace RotationDecomposition {
             });
             scene.AddActor(shape, Color.Orange, (double time, Scene.StatePair state) => state.Current.M2);
             scene.Play(300, Math.PI * 2);
+
+            scene = new Scene("Eigen_composite_RTS", Color.Black);
+            scene.AddActor(clock, Color.DimGray, (double time, Scene.StatePair state) => getRotationMatrix(time));
+            scene.AddActor(cross, Color.DimGray, (double time, Scene.StatePair state)
+                => (state.Current.M1 = getCompositeMatrix_RTS(time)));
+            scene.AddActor(shape, Color.FromArgb(255, 40, 40, 40), (double time, Scene.StatePair state) => identity);
+            scene.AddActor(shape, Color.White, (double time, Scene.StatePair state) => state.Current.M1);
+            scene.AddActor(shape, Color.LightGreen, (double time, Scene.StatePair state)
+                => (state.Current.Evd = state.Current.M1.Evd()).EigenVectors.Inverse());
+            scene.AddActor(shape, Color.Orange, (double time, Scene.StatePair state)
+                => state.Current.Evd.EigenVectors * state.Current.Evd.D);
+            scene.Play(200, Math.PI * 2);
         }
 
         private static Matrix<double> getRotationMatrix(double time) {
