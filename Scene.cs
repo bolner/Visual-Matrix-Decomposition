@@ -80,11 +80,11 @@ namespace RotationDecomposition {
                 throw new Exception("Invalid frameCount parameter.");
             }
 
-            int shots = 5;
+            int shots = 6;
             int sm1 = shots - 1;
             double q = Math.Pow(1.0 / (double)shots, 1.0 / (double)(shots - 1));
-            int width = 1080;
-            int height = 1080;
+            int width = 1440;
+            int height = 1440;
             double zoom = 8;
 
             for (int frame = 0; frame < frameCount; frame++) {

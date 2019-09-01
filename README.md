@@ -9,6 +9,7 @@ Other videos:
 - Continuous QR decomposition: https://www.youtube.com/watch?v=ZDH84Yu8B3E
 - An older version of the LU dec.: https://www.youtube.com/watch?v=Mc89G9_kPwk
 - Eigendecomposition: https://www.youtube.com/watch?v=ZpqwO0348Dw
+- Eigendecomposition with shearing: https://www.youtube.com/watch?v=hF6pPGwvvYg (1440p)
 
 # Install `.NET Core`
 
@@ -31,4 +32,4 @@ On Windows:
 
 # To convert the images to videos, use FFMPEG:
 
-    "E:\ffmpeg\ffmpeg.exe" -start_number 0 -loop 1 -t 120 -i "E:\path\to\source\frame_%4d.png" -c:v libx264 -b 2100K -vf "fps=30,format=yuv420p" E:\path\to\dest\LU_composite_RT.mp4
+    "E:\ffmpeg\ffmpeg.exe" -start_number 0 -loop 1 -t 120 -i "E:\path\to\source\frame_%4d.png" -c:v libx264 -b 2800K -vf "fps=30" E:\path\to\dest\video.mp4

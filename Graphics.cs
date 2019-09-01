@@ -14,7 +14,6 @@
     limitations under the License.
 */
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using MathNet.Numerics.LinearAlgebra;
 
@@ -25,26 +24,30 @@ namespace RotationDecomposition {
 
             PointF previous = new PointF(float.NegativeInfinity, float.NegativeInfinity);
 
-            using (Pen pen = new Pen(color, 3.6f))
-            {
-                for (int i = 0; i < vectors.Length; i++) {
-                    if (vectors[i][0] == double.NegativeInfinity) {
-                        // Instruction for raising the pen
-                        previous = new PointF(float.NegativeInfinity, float.NegativeInfinity);
-                        continue;
+            try {
+                using (Pen pen = new Pen(color, 3.6f))
+                {
+                    for (int i = 0; i < vectors.Length; i++) {
+                        if (vectors[i][0] == double.NegativeInfinity) {
+                            // Instruction for raising the pen
+                            previous = new PointF(float.NegativeInfinity, float.NegativeInfinity);
+                            continue;
+                        }
+
+                        PointF next = new PointF(
+                            (float)((width * 0.5) + (vectors[i][0] - centerX) * zoom),
+                            (float)((height * 0.5) - (vectors[i][1] - centerY) * zoom)
+                        );
+
+                        if (previous.X != float.NegativeInfinity) {
+                            graphics.DrawLine(pen, previous, next);
+                        }
+
+                        previous = next;
                     }
-
-                    PointF next = new PointF(
-                        (float)((width * 0.5) + (vectors[i][0] - centerX) * zoom),
-                        (float)((height * 0.5) - (vectors[i][1] - centerY) * zoom)
-                    );
-
-                    if (previous.X != float.NegativeInfinity) {
-                        graphics.DrawLine(pen, previous, next);
-                    }
-
-                    previous = next;
                 }
+            } catch (Exception) {
+                // Overflow: ignore
             }
         }
 
